@@ -9,8 +9,8 @@ class Note:
         self.window_size = screen.get_size()
 
         self.x = (lane - 1) * lane_width
-        self.y = 0
-        self.rect = pygame.Rect(self.x, self.y, lane_width, 50)
+        self.y = -5
+        self.rect = pygame.Rect(self.x, self.y, lane_width, 10)
 
     def draw_note(self):
         self.rect = self.rect.move(0, self.speed)
