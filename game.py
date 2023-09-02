@@ -69,6 +69,7 @@ class Game:
             notes_binary_data = bf.read()
             notes_encode_data = detect(notes_binary_data)
 
+        # load notes
         self.note_list = []
         with open(notes_path, encoding=notes_encode_data["encoding"]) as f:
             reader = csv.reader(f)
