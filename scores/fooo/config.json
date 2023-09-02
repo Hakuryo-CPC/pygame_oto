@@ -1,8 +1,8 @@
-{
-    "title": "ドラム",
+﻿{
+    "title": "utf-8 with bom file test",
     "music_file": "drum.wav",
     "bpm": 60,
-    "speed": 12,
+    "speed": 6,
     "lanes": {
         "easy": 3
     }

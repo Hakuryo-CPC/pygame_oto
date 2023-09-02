@@ -5,6 +5,7 @@ import json
 import csv
 import os
 import time
+from chardet import detect
 
 from note import Note
 from text import JudgeText
@@ -51,14 +52,25 @@ class Game:
         config_path = score_dir + "config.json"
         notes_path = score_dir + f"notes/{self.difficulty}.csv"
 
-        with open(config_path) as f:
+        # detect file encoding for config
+        with open(config_path, "rb") as bf:
+            conf_binary_data = bf.read()
+            conf_encode_data = detect(conf_binary_data)
+
+        # load config
+        with open(config_path, encoding=conf_encode_data["encoding"]) as f:
             config = json.load(f)
         self.lanes = config["lanes"][self.difficulty]
         self.speed = config["speed"]
         self.music_path = f"{score_dir}{config['music_file']}"
 
+        # detect file encoding for notes
+        with open(notes_path, "rb") as bf:
+            notes_binary_data = bf.read()
+            notes_encode_data = detect(notes_binary_data)
+
         self.note_list = []
-        with open(notes_path) as f:
+        with open(notes_path, encoding=notes_encode_data["encoding"]) as f:
             reader = csv.reader(f)
             for note in reader:
                 if note[0] == "beat":
