@@ -27,13 +27,16 @@ class Game:
         self.music_playing = False
 
         pygame.init()
-        pygame.mixer.init()
         self.screen = pygame.display.set_mode(self.window_size, RESIZABLE)
         self.clock = pygame.time.Clock()
 
         self.load_score()
 
+        # mixer init
+        pygame.mixer.init()
         pygame.mixer.music.load(self.music_path)
+        sound_path = f"{os.getcwd()}/assets/sound/press.mp3"
+        self.press_se = pygame.mixer.Sound(sound_path)
 
         # lane to judge_text but it's 0-indexed
         self.judge_texts = [JudgeText("none", 0)] * self.lanes
@@ -107,6 +110,8 @@ class Game:
                 self.running = False
             elif event.type == VIDEORESIZE:
                 self.window_size = self.screen.get_size()
+            elif event.type == pygame.KEYDOWN:
+                self.play_se()
 
     def draw_notes(self):
         for note in self.note_list:
@@ -195,3 +200,7 @@ class Game:
             self.music_starttime = time.time()
             pygame.mixer.music.play()
             self.music_playing = True
+
+    def play_se(self):
+        self.press_se.play()
+        self.press_se.set_volume(1.0)
