@@ -146,8 +146,7 @@ class Game:
                     self.judge_texts[note.lane - 1] = JudgeText(note.judge(), note.lane)
                     self.combo_text = ComboText(self.combo)
                     self.last_judged[note.lane - 1] = time.time()
-
-        if note.is_fallen():
+        elif note.is_fallen():
             self.combo = 0
             self.notes.remove(note)
             self.judge_texts[note.lane - 1] = JudgeText("miss", note.lane)
