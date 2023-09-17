@@ -18,7 +18,7 @@ while running:
     if state == State.Menu:
         menu = Menu(screen)
         state = menu.next_state
-        if not state == State.Menu:
+        if state == State.Game:
             score = menu.selecting.name
             difficulty = menu.selecting.difficulty
     elif state == State.Game:

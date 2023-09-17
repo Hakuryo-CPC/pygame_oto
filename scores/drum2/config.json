@@ -1,0 +1,9 @@
+{
+    "title": "ドラム2",
+    "music_file": "drum.wav",
+    "bpm": 60,
+    "speed": 12,
+    "lanes": {
+        "easy": 3
+    }
+}
