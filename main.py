@@ -1,5 +1,6 @@
 import pygame
 from pygame import RESIZABLE
+import asyncio
 
 from menu import Menu
 from game import Game
@@ -12,18 +13,36 @@ pygame.init()
 screen = pygame.display.set_mode(WINDOW_SIZE, RESIZABLE)
 
 
-state = State.Menu
-running = True
-while running:
-    if state == State.Menu:
-        menu = Menu(screen)
-        state = menu.next_state
-        if state == State.Game:
-            score = menu.selecting.name
-            difficulty = menu.selecting.difficulty
-    elif state == State.Game:
-        state = Game(screen, score, difficulty).next_state
-    elif state == State.Result:
-        state = Result(screen).next_state
-    elif state == State.Quit:
-        running = False
+async def main():
+    state = State.Menu
+    menu = Menu(screen)
+
+    running = True
+    while running:
+        if state == State.Menu:
+            menu.main_loop()
+            state = menu.next_state
+            if state == State.Game:
+                score = menu.selecting.name
+                difficulty = menu.selecting.difficulty
+                game = Game(screen, score, difficulty)
+
+        elif state == State.Game:
+            game.main_loop()
+            state = game.next_state
+            if state == State.Result:
+                result = Result(screen)
+
+        elif state == State.Result:
+            result.main_loop()
+            state = result.next_state
+            if state == State.Menu:
+                menu = Menu(screen)
+
+        elif state == State.Quit:
+            running = False
+
+        await asyncio.sleep(0)
+
+
+asyncio.run(main())

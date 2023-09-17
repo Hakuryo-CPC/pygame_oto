@@ -28,16 +28,15 @@ class Menu:
 
         self.get_scores()
         # asyncio.run(self.main_loop())
-        self.main_loop()
+        # self.main_loop()
 
     def main_loop(self):
         self.running = True
-        while self.running:
-            self.event()
-            self.draw_scores()
-            self.draw_scroll_button()
+        self.event()
+        self.draw_scores()
+        self.draw_scroll_button()
 
-            pygame.display.flip()
+        pygame.display.flip()
 
     def event(self):
         for event in pygame.event.get():

@@ -50,8 +50,6 @@ class Game:
         self.note_arrive_time = (self.window_size[1] * 0.9) / (self.speed * 60)
         self.music_starttime = self.starttime + self.note_arrive_time
 
-        self.main_loop()
-
     def load_score(self):
         score_dir = f"{os.getcwd()}/scores/{self.score_name}/"
         config_path = score_dir + "config.json"
@@ -88,21 +86,21 @@ class Game:
                                 ),
                             ]
                         )
+
+                self.last_note_time = self.note_list[-1][0]
                 break
             except:
                 print(f"file encoding is not {encoding}, retrying...")
 
     def main_loop(self):
-        self.running = True
-        while self.running:
-            self.clicked = [False] * self.lanes
-            self.event()
-            self.draw_board()
-            self.draw_notes()
-            self.play_music()
+        self.clicked = [False] * self.lanes
+        self.event()
+        self.draw_board()
+        self.draw_notes()
+        self.play_music()
 
-            pygame.display.flip()
-            self.clock.tick(60)
+        pygame.display.flip()
+        self.clock.tick(60)
 
     def event(self):
         for event in pygame.event.get():
@@ -210,10 +208,9 @@ class Game:
             pygame.mixer.music.play()
             self.music_playing = True
 
-        if self.music_playing:
-            if not pygame.mixer.music.get_busy():
-                self.next_state = State.Result
-                self.running = False
+        if time.time() - self.music_starttime - self.last_note_time >= 1.5:
+            self.next_state = State.Result
+            self.running = False
 
     # def play_se(self):
     #     self.press_se.play()

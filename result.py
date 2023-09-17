@@ -13,15 +13,11 @@ class Result:
         font_path = f"{os.getcwd()}/assets/font/RocknRollOne-Regular.ttf"
         self.font = pygame.font.Font(font_path, 50)
 
-        self.main_loop()
-
     def main_loop(self):
-        self.running = True
-        while self.running:
-            self.event()
-            self.draw_result()
+        self.event()
+        self.draw_result()
 
-            pygame.display.flip()
+        pygame.display.flip()
 
     def event(self):
         for event in pygame.event.get():
