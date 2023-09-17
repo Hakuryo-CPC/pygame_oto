@@ -4,7 +4,6 @@ import json
 import csv
 import os
 import time
-import asyncio
 
 from note import Note
 from text import JudgeText
@@ -51,7 +50,7 @@ class Game:
         self.note_arrive_time = (self.window_size[1] * 0.9) / (self.speed * 60)
         self.music_starttime = self.starttime + self.note_arrive_time
 
-        asyncio.run(self.main_loop())
+        self.main_loop()
 
     def load_score(self):
         score_dir = f"{os.getcwd()}/scores/{self.score_name}/"
@@ -93,7 +92,7 @@ class Game:
             except:
                 print(f"file encoding is not {encoding}, retrying...")
 
-    async def main_loop(self):
+    def main_loop(self):
         self.running = True
         while self.running:
             self.clicked = [False] * self.lanes
@@ -104,7 +103,6 @@ class Game:
 
             pygame.display.flip()
             self.clock.tick(60)
-            await asyncio.sleep(0)
 
     def event(self):
         for event in pygame.event.get():

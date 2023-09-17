@@ -1,5 +1,4 @@
 import pygame
-import asyncio
 import os
 
 from state import State
@@ -14,17 +13,15 @@ class Result:
         font_path = f"{os.getcwd()}/assets/font/RocknRollOne-Regular.ttf"
         self.font = pygame.font.Font(font_path, 50)
 
-        asyncio.run(self.main_loop())
+        self.main_loop()
 
-    async def main_loop(self):
+    def main_loop(self):
         self.running = True
         while self.running:
             self.event()
             self.draw_result()
 
             pygame.display.flip()
-
-            await asyncio.sleep(0)
 
     def event(self):
         for event in pygame.event.get():

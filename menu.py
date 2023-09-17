@@ -1,6 +1,5 @@
 import pygame
 import os
-import asyncio
 import json
 
 from game import Game
@@ -28,17 +27,16 @@ class Menu:
         self.selecting_score = ""
 
         self.get_scores()
-        asyncio.run(self.main_loop())
+        # asyncio.run(self.main_loop())
+        self.main_loop()
 
-    async def main_loop(self):
+    def main_loop(self):
         self.running = True
         while self.running:
             self.event()
             self.draw_scores()
 
             pygame.display.flip()
-
-            await asyncio.sleep(0)
 
     def event(self):
         for event in pygame.event.get():
@@ -92,4 +90,4 @@ class Menu:
                         )
                     break
                 except:
-                    print(f"file encoding is not {encoding}, retrying...")
+                    print(f"{score_name} file encoding is not {encoding}, retrying...")
