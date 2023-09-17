@@ -213,6 +213,11 @@ class Game:
             pygame.mixer.music.play()
             self.music_playing = True
 
+        if self.music_playing:
+            if not pygame.mixer.music.get_busy():
+                self.next_state = State.Result
+                self.running = False
+
     # def play_se(self):
     #     self.press_se.play()
     #     self.press_se.set_volume(1.0)
