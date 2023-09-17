@@ -5,7 +5,7 @@ import json
 import csv
 import os
 import time
-from chardet import detect
+import asyncio
 
 from note import Note
 from text import JudgeText
@@ -35,8 +35,8 @@ class Game:
         # mixer init
         pygame.mixer.init()
         pygame.mixer.music.load(self.music_path)
-        sound_path = f"{os.getcwd()}/assets/sound/press.mp3"
-        self.press_se = pygame.mixer.Sound(sound_path)
+        # sound_path = f"{os.getcwd()}/assets/sound/press.mp3"
+        # self.press_se = pygame.mixer.Sound(sound_path)
 
         # lane to judge_text but it's 0-indexed
         self.judge_texts = [JudgeText("none", 0)] * self.lanes
@@ -48,52 +48,49 @@ class Game:
         self.note_arrive_time = (self.window_size[1] * 0.9) / (self.speed * 60)
         self.music_starttime = self.starttime + self.note_arrive_time
 
-        self.main_loop()
+        asyncio.run(self.main_loop())
 
     def load_score(self):
         score_dir = f"{os.getcwd()}/scores/{self.score_name}/"
         config_path = score_dir + "config.json"
         notes_path = score_dir + f"notes/{self.difficulty}.csv"
 
-        # detect file encoding for config
-        with open(config_path, "rb") as bf:
-            conf_binary_data = bf.read()
-            conf_encode_data = detect(conf_binary_data)
+        encodings = ["UTF-8-SIG", "utf-8", "shift_jis", "utf-16-le", "utf-16"]
 
         # load config
-        with open(config_path, encoding=conf_encode_data["encoding"]) as f:
-            config = json.load(f)
-        self.lanes = config["lanes"][self.difficulty]
-        self.speed = config["speed"]
-        self.music_path = f"{score_dir}{config['music_file']}"
+        for encoding in encodings:
+            try:
+                with open(config_path, encoding=encoding) as f:
+                    config = json.load(f)
+                self.lanes = config["lanes"][self.difficulty]
+                self.speed = config["speed"]
+                self.music_path = f"{score_dir}{config['music_file']}"
 
-        # detect file encoding for notes
-        with open(notes_path, "rb") as bf:
-            notes_binary_data = bf.read()
-            notes_encode_data = detect(notes_binary_data)
+                # load notes
+                self.note_list = []
+                with open(notes_path, encoding=encoding) as f:
+                    reader = csv.reader(f)
+                    for note in reader:
+                        if note[0] == "beat":
+                            continue
 
-        # load notes
-        self.note_list = []
-        with open(notes_path, encoding=notes_encode_data["encoding"]) as f:
-            reader = csv.reader(f)
-            for note in reader:
-                if note[0] == "beat":
-                    continue
+                        note_time = 60 / config["bpm"] * (float(note[0]) - 1)
+                        self.note_list.append(
+                            [
+                                note_time,
+                                Note(
+                                    self.speed,
+                                    int(note[1]),
+                                    self.window_size[0] / self.lanes,
+                                    self.screen,
+                                ),
+                            ]
+                        )
+                break
+            except:
+                print(f"file encoding is not {encoding}, retrying...")
 
-                note_time = 60 / config["bpm"] * (float(note[0]) - 1)
-                self.note_list.append(
-                    [
-                        note_time,
-                        Note(
-                            self.speed,
-                            int(note[1]),
-                            self.window_size[0] / self.lanes,
-                            self.screen,
-                        ),
-                    ]
-                )
-
-    def main_loop(self):
+    async def main_loop(self):
         self.running = True
         while self.running:
             self.event()
@@ -103,6 +100,7 @@ class Game:
 
             pygame.display.flip()
             self.clock.tick(60)
+            await asyncio.sleep(0)
 
     def event(self):
         for event in pygame.event.get():
@@ -110,8 +108,8 @@ class Game:
                 self.running = False
             elif event.type == VIDEORESIZE:
                 self.window_size = self.screen.get_size()
-            elif event.type == pygame.KEYDOWN:
-                self.play_se()
+            # elif event.type == pygame.KEYDOWN:
+            #     self.play_se()
 
     def draw_notes(self):
         for note in self.note_list:
@@ -201,6 +199,6 @@ class Game:
             pygame.mixer.music.play()
             self.music_playing = True
 
-    def play_se(self):
-        self.press_se.play()
-        self.press_se.set_volume(1.0)
+    # def play_se(self):
+    #     self.press_se.play()
+    #     self.press_se.set_volume(1.0)
