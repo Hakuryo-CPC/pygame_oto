@@ -1,5 +1,4 @@
 import pygame
-from pygame.locals import RESIZABLE
 from pygame.locals import VIDEORESIZE
 import json
 import csv
@@ -10,6 +9,7 @@ import asyncio
 from note import Note
 from text import JudgeText
 from text import ComboText
+from state import State
 
 # Pygame Color Definitions
 BG_COLOR = pygame.Color(200, 200, 200)
@@ -17,17 +17,18 @@ LINE_COLOR = pygame.Color(0, 0, 0)
 
 
 class Game:
-    def __init__(self, window_size, score_name, difficulty):
-        self.window_size = window_size
+    def __init__(self, screen, score_name, difficulty):
+        self.screen = screen
+        self.window_size = screen.get_size()
         self.score_name = score_name
         self.difficulty = difficulty
+
+        self.next_state = State.Game
 
         self.combo = 0
         self.notes = []
         self.music_playing = False
 
-        pygame.init()
-        self.screen = pygame.display.set_mode(self.window_size, RESIZABLE)
         self.clock = pygame.time.Clock()
 
         self.load_score()
@@ -44,6 +45,8 @@ class Game:
         self.starttime = time.time()
         # lane to last judged time but it's 0-indexed
         self.last_judged = [self.starttime] * self.lanes
+        # lane to isclicked but it's 0-indexed
+        self.clicked = [False] * self.lanes
 
         self.note_arrive_time = (self.window_size[1] * 0.9) / (self.speed * 60)
         self.music_starttime = self.starttime + self.note_arrive_time
@@ -93,6 +96,7 @@ class Game:
     async def main_loop(self):
         self.running = True
         while self.running:
+            self.clicked = [False] * self.lanes
             self.event()
             self.draw_board()
             self.draw_notes()
@@ -105,11 +109,20 @@ class Game:
     def event(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                self.next_state = State.Quit
                 self.running = False
             elif event.type == VIDEORESIZE:
                 self.window_size = self.screen.get_size()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                self.judge_click(event.pos)
             # elif event.type == pygame.KEYDOWN:
             #     self.play_se()
+
+    def judge_click(self, pos):
+        for i in range(self.lanes):
+            if pos[0] < self.window_size[0] / self.lanes * (i + 1):
+                self.clicked[i] = True
+                break
 
     def draw_notes(self):
         for note in self.note_list:
@@ -135,7 +148,7 @@ class Game:
         }
 
         pressed_keys = pygame.key.get_pressed()
-        if pressed_keys[lane_to_key[note.lane]]:
+        if pressed_keys[lane_to_key[note.lane]] or self.clicked[note.lane - 1]:
             judge = note.judge()
             if time.time() - self.last_judged[note.lane - 1] > 0.1:
                 if not judge == "none":
@@ -169,6 +182,7 @@ class Game:
         self.screen.fill(BG_COLOR)
 
         # draw lines
+        # [0] is judge line, others are lane line
         line_positions = [
             [
                 [0, self.window_size[1] * 0.9],
