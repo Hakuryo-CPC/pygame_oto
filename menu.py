@@ -95,15 +95,16 @@ class Menu:
                 self.window_size[1] * 0.1,
             ),
         )
-        pygame.draw.polygon(
-            self.screen,
-            (200, 200, 200),
-            (
-                [self.window_size[0] * 0.4, self.window_size[1] * 0.04],
-                [self.window_size[0] * 0.35, self.window_size[1] * 0.1],
-                [self.window_size[0] * 0.45, self.window_size[1] * 0.1],
-            ),
-        )
+        if not self.top == 0:
+            pygame.draw.polygon(
+                self.screen,
+                (200, 200, 200),
+                (
+                    [self.window_size[0] * 0.4, self.window_size[1] * 0.04],
+                    [self.window_size[0] * 0.35, self.window_size[1] * 0.1],
+                    [self.window_size[0] * 0.45, self.window_size[1] * 0.1],
+                ),
+            )
 
         # down
         self.down_button = pygame.draw.rect(
@@ -116,15 +117,16 @@ class Menu:
                 self.window_size[1] * 0.1,
             ),
         )
-        pygame.draw.polygon(
-            self.screen,
-            (200, 200, 200),
-            (
-                [self.window_size[0] * 0.4, self.window_size[1] * 0.95],
-                [self.window_size[0] * 0.35, self.window_size[1] * 0.89],
-                [self.window_size[0] * 0.45, self.window_size[1] * 0.89],
-            ),
-        )
+        if self.top + 5 < len(self.scores):
+            pygame.draw.polygon(
+                self.screen,
+                (200, 200, 200),
+                (
+                    [self.window_size[0] * 0.4, self.window_size[1] * 0.95],
+                    [self.window_size[0] * 0.35, self.window_size[1] * 0.89],
+                    [self.window_size[0] * 0.45, self.window_size[1] * 0.89],
+                ),
+            )
 
     def get_scores(self):
         score_dir = f"{os.getcwd()}/scores/"
