@@ -14,7 +14,7 @@ from state import State
 BG_COLOR = pygame.Color(200, 200, 200)
 LINE_COLOR = pygame.Color(0, 0, 0)
 
-FPS = 30
+FPS = 60
 
 
 class Game:
