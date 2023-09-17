@@ -123,11 +123,10 @@ class Game:
                 break
 
     def draw_notes(self):
+        time_now = time.time()
         for note in self.note_list:
             if (
-                abs(
-                    time.time() - self.music_starttime + self.note_arrive_time - note[0]
-                )
+                abs(time_now - self.music_starttime + self.note_arrive_time - note[0])
                 < 0.03
             ):
                 self.notes.append(note[1])
