@@ -14,6 +14,8 @@ from state import State
 BG_COLOR = pygame.Color(200, 200, 200)
 LINE_COLOR = pygame.Color(0, 0, 0)
 
+FPS = 30
+
 
 class Game:
     def __init__(self, screen, score_name, difficulty):
@@ -83,6 +85,7 @@ class Game:
                                     int(note[1]),
                                     self.window_size[0] / self.lanes,
                                     self.screen,
+                                    FPS,
                                 ),
                             ]
                         )
@@ -100,7 +103,7 @@ class Game:
         self.play_music()
 
         pygame.display.flip()
-        self.clock.tick(60)
+        self.clock.tick(FPS)
 
     def event(self):
         for event in pygame.event.get():
