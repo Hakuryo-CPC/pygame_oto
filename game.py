@@ -120,6 +120,7 @@ class Game:
                 self.window_size = self.screen.get_size()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self.judge_click(event.pos)
+                self.play_se()
             elif event.type == pygame.KEYDOWN:
                 self.play_se()
 
