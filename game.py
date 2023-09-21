@@ -127,6 +127,9 @@ class Game:
                 self.judge_click(event.pos)
                 self.play_se()
             elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.mixer.music.unload()
+                    self.next_state = State.Menu
                 self.play_se()
 
     def judge_click(self, pos):

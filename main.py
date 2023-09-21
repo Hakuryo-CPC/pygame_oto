@@ -32,6 +32,8 @@ async def main():
             state = game.next_state
             if state == State.Result:
                 result = Result(screen, game.point)
+            elif state == State.Menu:
+                menu = Menu(screen)
 
         elif state == State.Result:
             result.main_loop()
