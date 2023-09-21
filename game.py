@@ -121,7 +121,6 @@ class Game:
         for i in range(self.lanes):
             if pos[0] < self.window_size[0] / self.lanes * (i + 1):
                 self.clicked[i] = True
-                break
 
     def draw_notes(self):
         time_now = time.time()
