@@ -45,6 +45,9 @@ class Menu:
                 self.window_size = self.screen.get_size()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self.judge_click(event.pos)
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_F11:
+                    pygame.display.toggle_fullscreen()
 
     def judge_click(self, pos):
         for tr in self.text_rects:
