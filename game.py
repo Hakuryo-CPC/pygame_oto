@@ -17,6 +17,12 @@ LINE_COLOR = pygame.Color(0, 0, 0)
 FPS = 60
 
 
+class GameKey:
+    def __init__(self, key, label):
+        self.key = key
+        self.label = label
+
+
 class Game:
     def __init__(self, screen, score_name, difficulty):
         self.screen = screen
@@ -33,6 +39,7 @@ class Game:
         self.clock = pygame.time.Clock()
 
         self.load_score()
+        self.key_bind()
 
         # mixer init
         pygame.mixer.init()
@@ -134,17 +141,32 @@ class Game:
             note.draw_note()
             self.judge(note)
 
-    def judge(self, note):
-        lane_to_key = {
-            1: pygame.K_1,
-            2: pygame.K_2,
-            3: pygame.K_3,
-            4: pygame.K_4,
-            5: pygame.K_5,
-        }
+    # Bind like:
+    # Lane: 1 2 3     4 5
+    # Key : D F Space J K
+    def key_bind(self):
+        self.lane_to_key = {}
+        mid = int(self.lanes / 2)
+        if self.lanes % 2 == 1:
+            self.lane_to_key[mid + 1] = GameKey(key=pygame.K_SPACE, label="Space")
 
+        left_side = [
+            GameKey(pygame.K_f, "F"),
+            GameKey(pygame.K_d, "D"),
+            GameKey(pygame.K_s, "S"),
+        ]
+        right_side = [
+            GameKey(pygame.K_j, "J"),
+            GameKey(pygame.K_k, "K"),
+            GameKey(pygame.K_l, "L"),
+        ]
+        for i in range(mid):
+            self.lane_to_key[mid - i] = left_side[i]
+            self.lane_to_key[mid + 1 + (self.lanes % 2) + i] = right_side[i]
+
+    def judge(self, note):
         pressed_keys = pygame.key.get_pressed()
-        if pressed_keys[lane_to_key[note.lane]] or self.clicked[note.lane - 1]:
+        if pressed_keys[self.lane_to_key[note.lane].key] or self.clicked[note.lane - 1]:
             judge = note.judge()
             if time.time() - self.last_judged[note.lane - 1] > 0.1:
                 if not judge == "none":
