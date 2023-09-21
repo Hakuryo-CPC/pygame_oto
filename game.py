@@ -37,8 +37,8 @@ class Game:
         # mixer init
         pygame.mixer.init()
         pygame.mixer.music.load(self.music_path)
-        # sound_path = f"{os.getcwd()}/assets/sound/press.mp3"
-        # self.press_se = pygame.mixer.Sound(sound_path)
+        sound_path = f"{os.getcwd()}/assets/sound/press.ogg"
+        self.press_se = pygame.mixer.Sound(sound_path)
 
         # lane to judge_text but it's 0-indexed
         self.judge_texts = [JudgeText("none", 0)] * self.lanes
@@ -113,8 +113,8 @@ class Game:
                 self.window_size = self.screen.get_size()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self.judge_click(event.pos)
-            # elif event.type == pygame.KEYDOWN:
-            #     self.play_se()
+            elif event.type == pygame.KEYDOWN:
+                self.play_se()
 
     def judge_click(self, pos):
         for i in range(self.lanes):
@@ -212,6 +212,6 @@ class Game:
         if time.time() - self.music_starttime - self.last_note_time >= 1.5:
             self.next_state = State.Result
 
-    # def play_se(self):
-    #     self.press_se.play()
-    #     self.press_se.set_volume(1.0)
+    def play_se(self):
+        self.press_se.play()
+        self.press_se.set_volume(1.0)
