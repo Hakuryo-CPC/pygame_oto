@@ -31,7 +31,7 @@ async def main():
             game.main_loop()
             state = game.next_state
             if state == State.Result:
-                result = Result(screen)
+                result = Result(screen, game.point)
 
         elif state == State.Result:
             result.main_loop()

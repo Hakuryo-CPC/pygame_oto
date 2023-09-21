@@ -9,6 +9,7 @@ from note import Note
 from text import JudgeText
 from text import ComboText
 from text import KeyBindText
+from text import PointText
 from state import State
 
 # Pygame Color Definitions
@@ -34,6 +35,7 @@ class Game:
         self.next_state = State.Game
 
         self.combo = 0
+        self.point = 0
         self.notes = []
         self.music_playing = False
 
@@ -109,6 +111,7 @@ class Game:
         self.draw_board()
         self.draw_notes()
         KeyBindText(self.lane_to_key, self.screen).draw()
+        PointText(self.screen, self.point).draw()
         self.play_music()
 
         pygame.display.flip()
@@ -183,6 +186,25 @@ class Game:
                     self.judge_texts[note.lane - 1] = JudgeText(note.judge(), note.lane)
                     self.combo_text = ComboText(self.combo)
                     self.last_judged[note.lane - 1] = time.time()
+
+                    if judge == "perfect":
+                        self.point += 100
+                    elif judge == "good":
+                        self.point += 80
+                    elif judge == "ok":
+                        self.point += 40
+
+                    if self.combo >= 15:
+                        self.point += self.combo * 10
+
+                    if self.combo == 10:
+                        self.point += 250
+                    elif self.combo == 20:
+                        self.point += 500
+                    elif self.combo == 50:
+                        self.point += 1000
+                    elif self.combo == 100:
+                        self.point += 3000
         elif note.is_fallen():
             self.combo = 0
             self.notes.remove(note)

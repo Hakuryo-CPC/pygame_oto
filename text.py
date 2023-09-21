@@ -58,3 +58,17 @@ class KeyBindText:
                 key_bind_text,
                 (self.lane_width * (lane - 1), self.window_size[1] * 0.9),
             )
+
+
+class PointText:
+    def __init__(self, screen, point):
+        self.screen = screen
+        self.point = point
+
+        self.font = pygame.font.Font(font_path, 20)
+
+        self.window_size = self.screen.get_size()
+
+    def draw(self):
+        text = self.font.render(f"スコア: {self.point}", True, (0, 0, 0))
+        self.screen.blit(text, (self.window_size[0] * 0.05, self.window_size[1] * 0.05))
