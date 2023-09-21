@@ -23,7 +23,6 @@ class Result:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.next_state = State.Quit
-                self.running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self.judge_click(event.pos)
 
@@ -38,4 +37,3 @@ class Result:
     def judge_click(self, pos):
         if self.text_rect.collidepoint(pos):
             self.next_state = State.Menu
-            self.running = False

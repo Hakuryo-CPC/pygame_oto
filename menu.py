@@ -31,7 +31,6 @@ class Menu:
         # self.main_loop()
 
     def main_loop(self):
-        self.running = True
         self.event()
         self.draw_scores()
         self.draw_scroll_button()
@@ -42,7 +41,6 @@ class Menu:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.next_state = State.Quit
-                self.running = False
             elif event.type == VIDEORESIZE:
                 self.window_size = self.screen.get_size()
             elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -53,7 +51,6 @@ class Menu:
             if tr[1].collidepoint(pos):
                 self.selecting = self.scores[tr[0] + self.top]
                 self.next_state = State.Game
-                self.running = False
 
         if self.up_button.collidepoint(pos):
             self.top = max(0, self.top - 1)

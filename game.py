@@ -109,7 +109,6 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.next_state = State.Quit
-                self.running = False
             elif event.type == VIDEORESIZE:
                 self.window_size = self.screen.get_size()
             elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -212,7 +211,6 @@ class Game:
 
         if time.time() - self.music_starttime - self.last_note_time >= 1.5:
             self.next_state = State.Result
-            self.running = False
 
     # def play_se(self):
     #     self.press_se.play()
