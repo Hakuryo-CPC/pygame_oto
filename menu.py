@@ -51,7 +51,7 @@ class Menu:
     def judge_click(self, pos):
         for tr in self.text_rects:
             if tr[1].collidepoint(pos):
-                self.selecting = self.scores[tr[0]]
+                self.selecting = self.scores[tr[0] + self.top]
                 self.next_state = State.Game
                 self.running = False
 
