@@ -39,3 +39,22 @@ class ComboText:
         window_size = screen.get_size()
         combo_text = self.font.render(self.combo, True, (0, 0, 0))
         screen.blit(combo_text, (window_size[0] * 0.85, window_size[1] * 0.25))
+
+
+class KeyBindText:
+    def __init__(self, lane_to_key, screen):
+        self.lane_to_key = lane_to_key
+        self.screen = screen
+
+        self.font = pygame.font.Font(font_path, 20)
+
+        self.window_size = screen.get_size()
+        self.lane_width = self.window_size[0] / len(self.lane_to_key)
+
+    def draw(self):
+        for lane, game_key in self.lane_to_key.items():
+            key_bind_text = self.font.render(game_key.label, True, (0, 0, 0))
+            self.screen.blit(
+                key_bind_text,
+                (self.lane_width * (lane - 1), self.window_size[1] * 0.9),
+            )

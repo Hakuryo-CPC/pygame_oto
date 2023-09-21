@@ -8,6 +8,7 @@ import time
 from note import Note
 from text import JudgeText
 from text import ComboText
+from text import KeyBindText
 from state import State
 
 # Pygame Color Definitions
@@ -107,6 +108,7 @@ class Game:
         self.event()
         self.draw_board()
         self.draw_notes()
+        KeyBindText(self.lane_to_key, self.screen).draw()
         self.play_music()
 
         pygame.display.flip()
